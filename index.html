@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Book</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: 'Pacifico', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      flex-direction: column;
+      perspective: 1500px;
+    }
+
+    .matrix {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      color: #0f0;
+      font-size: 15px;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    .word {
+      font-size: 4em;
+      color: #ff69b4;
+      text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493, 0 0 30px #ff69b4;
+      opacity: 0;
+      animation: fadeIn 2s forwards, sparkle 2s infinite alternate;
+    }
+
+    .word:nth-child(2) { animation-delay: 2s; }
+    .word:nth-child(3) { animation-delay: 4s; }
+    .word:nth-child(4) { animation-delay: 6s; }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes sparkle {
+      0% {
+        text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493, 0 0 30px #ff69b4;
+      }
+      100% {
+        text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493, 0 0 60px #ff69b4;
+      }
+    }
+
+    .slide-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: fadeInSlide 1s forwards;
+    }
+
+    .slide-container img {
+      width: 220px;
+      height: 220px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff69b4;
+      margin-bottom: 20px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide-container.show img {
+      opacity: 1;
+    }
+
+    .slide-text {
+      font-size: 1.5em;
+      color: #ffccff;
+      max-width: 80%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide-container.show .slide-text {
+      opacity: 1;
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #book-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .greeting {
+      font-size: 1.8em;
+      color: #ff69b4;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #book {
+      position: relative;
+      width: 400px;
+      height: 500px;
+      transform-style: preserve-3d;
+    }
+
+    .page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      transform-origin: left;
+      transition: transform 1s ease;
+      overflow: hidden;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .page.flipped {
+      transform: rotateY(-180deg);
+      z-index: 0;
+    }
+
+    .page:nth-child(1) { z-index: 5; }
+    .page:nth-child(2) { z-index: 4; }
+    .page:nth-child(3) { z-index: 3; }
+    .page:nth-child(4) { z-index: 2; }
+    .page:nth-child(5) { z-index: 1; }
+
+    #book::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 0;
+      width: 20px;
+      height: 100%;
+      background: #333;
+      border-radius: 5px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+      z-index: 6;
+    }
+
+    .instructions {
+      color: #aaa;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
+    /* Music button */
+    #playMusic {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 20px;
+      background: #ff69b4;
+      color: white;
+      cursor: pointer;
+      z-index: 9999;
+      box-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nhạc nền -->
+  <audio id="bgMusic" src="birthday.mp3" loop></audio>
+  <button id="playMusic">🎵 Bật Nhạc</button>
+
+  <div class="matrix" id="matrix"></div>
+
+  <!-- Scene 1: Words -->
+  <div id="scene1">
+    <div class="word">HAPPY</div>
+    <div class="word">BIRTHDAY</div>
+    <div class="word">TO</div>
+    <div class="word">YOU</div>
+  </div>
+
+  <!-- Scene 1.5: Slides -->
+  <div class="slide-container" id="slideContainer">
+    <img id="slideImage" src="" alt="Slide Image">
+    <div class="slide-text" id="slideText"></div>
+  </div>
+
+  <!-- Scene 2: Book -->
+  <div id="book-container">
+    <div class="greeting">🎉 Chúc pet một ngày tràn ngập niềm vui 🎉</div>
+    <div id="book">
+      <div class="page"><img src="anh1.png" alt="Page 1"></div>
+      <div class="page"><img src="anh2.jpg" alt="Page 2"></div>
+      <div class="page"><img src="anh3.png" alt="Page 3"></div>
+      <div class="page"><img src="anh5.png" alt="Page 4"></div>
+      <div class="page"><img src="anh11.png" alt="Page 5"></div>
+    </div>
+    <div class="instructions">📖 Click từng trang để lật sách</div>
+  </div>
+
+  <script>
+    // Matrix effect
+    const matrix = document.getElementById('matrix');
+    const chars = 'HAPPYBIRTHDAYTOYOU';
+    const columns = Math.floor(window.innerWidth / 12);
+    function drawMatrix() {
+      let output = '';
+      for (let y = 0; y < 40; y++) {
+        for (let x = 0; x < columns; x++) {
+          const char = chars[Math.floor(Math.random() * chars.length)];
+          output += char + ' ';
+        }
+        output += '<br>';
+      }
+      matrix.innerHTML = output;
+    }
+    setInterval(drawMatrix, 200);
+
+    // Background music autoplay
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('playMusic');
+    bgMusic.volume = 0.5;
+
+    // Try autoplay
+    bgMusic.play().catch(() => {
+      // If autoplay fails, show button
+      musicBtn.style.display = 'block';
+    });
+
+    musicBtn.addEventListener('click', () => {
+      bgMusic.play();
+      musicBtn.style.display = 'none';
+    });
+
+    // Slide data
+    const slides = [
+      { image: "anh9.png", text: "tao chúc mày tuổi mới nhan sắc quyết liệt, tiền tài ào ào, tình yêu tưng bừng… đừng sống ở động “ế” lâu quá, người ta quên" },
+      { image: "anh8.png", text: "Chúc pet sinh nhật vất vả và hạnh phúc bỏ đi nhé…" },
+      { image: "anh10.png", text: "tuổi mới có tất cả trừ vất cả. Xin chúc mừng sinh nhật công dân xinh đẹp, kiêu sa, mỹ miều, yêu kiều nhất quả đất, chúc sớm phát tài nha gái." },
+      { image: "anh7.png", text: "sinh nhật vui vẻ , hạnh phúc mọi cố gắng sẽ được đền đáp\n\nT đại diện cho 7 tỷ người chúc m sanh thần vui vẻ" }
+    ];
+
+    const slideContainer = document.getElementById('slideContainer');
+    const slideImage = document.getElementById('slideImage');
+    const slideText = document.getElementById('slideText');
+
+    function showSlide(index) {
+      if (index < slides.length) {
+        slideImage.src = slides[index].image;
+        slideText.textContent = slides[index].text;
+        slideContainer.classList.add('show');
+
+        setTimeout(() => {
+          slideContainer.classList.remove('show');
+          showSlide(index + 1);
+        }, 5000);
+      } else {
+        document.getElementById('slideContainer').style.display = 'none';
+        document.getElementById('book-container').style.display = 'flex';
+      }
+    }
+
+    setTimeout(() => {
+      document.getElementById('scene1').style.display = 'none';
+      slideContainer.style.display = 'flex';
+      showSlide(0);
+    }, 9000);
+
+    const pages = document.querySelectorAll(".page");
+    pages.forEach((page) => {
+      page.addEventListener("click", () => {
+        page.classList.toggle("flipped");
+      });
+    });
+  </script>
+</body>
+</html>
