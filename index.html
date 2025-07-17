@@ -177,12 +177,42 @@
       box-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493;
       display: none;
     }
+
+    /* 🔥 Cảnh báo xoay ngang */
+    #rotateNotice {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: white;
+      font-size: 2em;
+      font-family: sans-serif;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 999999;
+    }
+
+    @media screen and (orientation: portrait) {
+      #rotateNotice {
+        display: flex;
+      }
+      body > *:not(#rotateNotice) {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Thông báo xoay ngang -->
+  <div id="rotateNotice">🔄 Vui lòng xoay ngang màn hình để xem 📱</div>
+
   <!-- Nhạc nền -->
-  <audio id="bgMusic" src="/your-repo-name/assets/audio/birthday.mp3" loop></audio>
+  <audio id="bgMusic" src="birthday.mp3" loop></audio>
   <button id="playMusic">🎵 Bật Nhạc</button>
 
   <div class="matrix" id="matrix"></div>
@@ -203,13 +233,13 @@
 
   <!-- Scene 2: Book -->
   <div id="book-container">
-    <div class="greeting">🎉 Chúc pet một ngày tràn ngập niềm vui 🎉</div>
+    <div class="greeting">🎉 Chúc mừng sinh nhật 🎉</div>
     <div id="book">
-      <div class="page"><img src="/your-repo-name/assets/images/anh1.png" alt="Page 1"></div>
-      <div class="page"><img src="/your-repo-name/assets/images/anh2.jpg" alt="Page 2"></div>
-      <div class="page"><img src="/your-repo-name/assets/images/anh3.png" alt="Page 3"></div>
-      <div class="page"><img src="/your-repo-name/assets/images/anh5.png" alt="Page 4"></div>
-      <div class="page"><img src="/your-repo-name/assets/images/anh11.png" alt="Page 5"></div>
+      <div class="page"><img src="anh1.png" alt="Page 1"></div>
+      <div class="page"><img src="anh2.jpg" alt="Page 2"></div>
+      <div class="page"><img src="anh3.png" alt="Page 3"></div>
+      <div class="page"><img src="anh5.png" alt="Page 4"></div>
+      <div class="page"><img src="anh11.png" alt="Page 5"></div>
     </div>
     <div class="instructions">📖 Click từng trang để lật sách</div>
   </div>
@@ -245,10 +275,10 @@
     setInterval(drawMatrix, 200);
 
     const slides = [
-      { image: "/your-repo-name/assets/images/anh9.png", text: "Chúc mừng sinh nhật 🎉" },
-      { image: "/your-repo-name/assets/images/anh8.png", text: "Tuổi mới nhiều niềm vui ❤️" },
-      { image: "/your-repo-name/assets/images/anh10.png", text: "Hạnh phúc và thành công 🌟" },
-      { image: "/your-repo-name/assets/images/anh7.png", text: "Bạn tuyệt vời nhất 🥳" }
+      { image: "anh9.png", text: "tao chúc mày tuổi mới nhan sắc quyết liệt, tiền tài ào ào, tình yêu tưng bừng… đừng sống ở động “ế” lâu quá, người ta quên 🎉" },
+      { image: "anh8.png", text: "Chúc pet sinh nhật vất vả và hạnh phúc bỏ đi nhé… tuổi mới có tất cả trừ vất cả ❤️" },
+      { image: "anh10.png", text: "Xin chúc mừng sinh nhật công dân xinh đẹp, kiêu sa, mỹ miều, yêu kiều nhất quả đất, chúc sớm phát tài nha gái.🌟" },
+      { image: "anh7.png", text: "sinh nhật vui vẻ , hạnh phúc mọi cố gắng sẽ được đền đáp, lời cuối cùng t đại diện cho 7 tỷ người chúc m sanh thần vui vẻ 🥳" }
     ];
 
     const slideContainer = document.getElementById('slideContainer');
